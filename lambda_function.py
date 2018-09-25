@@ -2,12 +2,12 @@ from alexa_response import get_session_attributes, get_response, give_response
 from search import search_name, search_questions, search_answer
 from output_speech import session_end_greetings, get_cancel_instructions, get_helping_instructions, no_correct_answer, no_questions, no_more_questions, next_related_question, next_related_answer, next_question, required_response, give_answer, give_comment, repeat_previous
 from testcase import get_testcase
-
+import sys
 
 def lambda_handler(event, context):
     # print event
     if event["session"]["new"]:
-        on_session_started({"requestId": event["request"]["requestId"]}, event["session"])
+        on_session_started(event["session"])
     if event["request"]["type"] == "LaunchRequest":
         return on_launch(event["request"], event["session"])
     elif event["request"]["type"] == "IntentRequest":
@@ -15,7 +15,7 @@ def lambda_handler(event, context):
     elif event["request"]["type"] == "SessionEndedRequest":
         return on_session_ended(event["request"], event["session"])
 
-def on_session_started(session_started_request, session):
+def on_session_started(session):
     print "Starting new session."
 
 def on_launch(launch_request, session):
@@ -260,5 +260,32 @@ def on_session_ended(session_ended_request, session):
     print "Ending session."
     # Cleanup goes here...
 if __name__ == "__main__":
-    temp_data = get_testcase()
-    print lambda_handler(temp_data[0], {})
+    test_case = get_testcase()
+    try:
+        index = sys.argv[1]
+        if((int(index) > 9)|(int(index) < 0)):
+            print "Please provide test case index between 0-9"
+            print '0 - Launch Request "Alexa, open stack overflow"'
+            print '1 - Help Intent "Alexa, ask stack overflow help"'
+            print '2 - Library Install request "Alexa, ask stack overflow how to install opencv in python"'
+            print '3 - When Alexa ask to coinfirm the question and user responds "no"'
+            print '4 - When Alexa ask to coinfirm the question and user responds "yes"'
+            print '5 - When Alexa provide answer to the question and user responds "repeat"'
+            print '6 - When user says yes to provide comments to the answer "yes"'
+            print '7 - When Alexa asks user whether or not to provide second best answer to the question and user responds "yes"'
+            print '8 - Error Intent "Alexa, ask stack overflow ehat is identation error in python"'
+            print '9 - Comparision Intent "Alexa, ask stack overflow which is superior Python or C++"'
+        else:
+            print lambda_handler(test_case[int(index)], {})
+    except:
+        print "Please provide test case number for ex : python lambda_function.py <test-case-index>"
+        print '0 - Launch Request "Alexa, open stack overflow"'
+        print '1 - Help Intent "Alexa, ask stack overflow help"'
+        print '2 - Library Install request "Alexa, ask stack overflow how to install opencv in python"'
+        print '3 - When Alexa ask to coinfirm the question and user responds "no"'
+        print '4 - When Alexa ask to coinfirm the question and user responds "yes"'
+        print '5 - When Alexa provide answer to the question and user responds "repeat"'
+        print '6 - When user says yes to provide comments to the answer "yes"'
+        print '7 - When Alexa asks user whether or not to provide second best answer to the question and user responds "yes"'
+        print '8 - Error Intent "Alexa, ask stack overflow ehat is identation error in python"'
+        print '9 - Comparision Intent "Alexa, ask stack overflow which is superior Python or C++"'

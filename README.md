@@ -11,3 +11,31 @@ Canada - [Stack Overflow Canada skill Store](https://www.amazon.ca/Yash-Stack-Ov
 
 # Video-Demonstration
 [Link to Youtube video](https://youtu.be/tuy70RlCJXg) 
+
+# Getting Started
+```python
+# Clone the github repo
+git clone https://github.com/mr-yamraj/Alexa-Stack-Overflow.git
+cd Alexa-Stack-Overflow
+
+#install all the dependencies
+pip install requirements.txt
+
+#run the function
+python lambda_function.py <test-case-index>
+Ex : python lambda_function.py 2 
+# You can change the testcases by changing the index number 0 to 9 description of all the test cases is provided below
+```
+
+## Description of Test Cases
+
+test_case[0] - Launch Request "Alexa, open stack overflow"
+test_case[1] - Help Intent "Alexa, ask stack overflow help"
+test_case[2] - Library Install request "Alexa, ask stack overflow how to install opencv in python"
+test_case[3] - When Alexa ask to coinfirm the question and user responds "no"
+test_case[4] - When Alexa ask to coinfirm the question and user responds "yes"
+test_case[5] - When Alexa provide answer to the question and user responds "repeat"
+test_case[6] - When user says yes to provide comments to the answer "yes"
+test_case[7] - When Alexa asks user whether or not to provide second best answer to the question and user responds "yes"
+test_case[8] - Error Intent "Alexa, ask stack overflow ehat is identation error in python"
+test_case[9] - Comparision Intent "Alexa, ask stack overflow which is superior Python or C++"
