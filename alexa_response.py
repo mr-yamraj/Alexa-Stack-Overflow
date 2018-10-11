@@ -1,6 +1,6 @@
-def get_session_attributes(previous_intent = "", previous_intent_attributes = "", requested_value = "", previous_requested_value = "", questions_ids = [], question_now_id = 0, question_name = "", answers_ids = [], answer_now_id = 0, comments_ids = [], comment_now_id = 0,  complete_answer = [], complete_code = [], complete_code_now_id = 0):
+def get_session_attributes(previous_intent = "", previous_intent_attributes = "", requested_value = "", previous_requested_value = "", questions_urls = [], question_now_id = 0, question_name = "", answers_ids = [], answer_now_id = 0, comments_ids = [], comment_now_id = 0,  complete_answer = [], complete_code = [], complete_code_now_id = 0):
     sessionAttributes = {}
-    sessionAttributes["questions_ids"] = questions_ids
+    sessionAttributes["questions_urls"] = questions_urls
     sessionAttributes["question_now_id"] = question_now_id
     sessionAttributes["question_name"] = question_name
     sessionAttributes["answers_ids"] = answers_ids

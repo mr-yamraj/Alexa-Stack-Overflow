@@ -121,16 +121,16 @@ def all_response(intent_request, query = "", session = ""):
             if intent_request["intent"]["slots"]["answer"]["value"] not in ["yes", "no", "repeat"]:
                 response, session_attributes = required_response(session)
     if session["new"] == True:
-        questions_ids = search_questions(query)
-        if len(questions_ids) > 0:
-            response, session_attributes = next_question(questions_ids, 0)
+        questions_urls= search_questions(query) # urls, domains
+        if len(questions_urls) > 0:
+            response, session_attributes = next_question(questions_urls, 0)
         else:
             response, session_attributes = no_questions()
     elif (session["attributes"]["requested_value"] not in ["next_question", "give_comment", "next_answer", "give_answer"]):
         print "hello"
-        questions_ids = search_questions(query)
-        if len(questions_ids) > 0:
-            response, session_attributes = next_question(questions_ids, 0)
+        questions_urls = search_questions(query) # urls, domains
+        if len(questions_urls) > 0:
+            response, session_attributes = next_question(questions_urls, 0)
         else:
             response, session_attributes = no_questions()
     elif intent_request["intent"]["slots"]["answer"]["value"] == "repeat":
@@ -138,8 +138,8 @@ def all_response(intent_request, query = "", session = ""):
     elif session["attributes"]["requested_value"] == "give_answer":
         if intent_request["intent"]["slots"]["answer"]["value"] == "no":
             if session["attributes"]["previous_requested_value"] == "next_question":
-                if session["attributes"]["question_now_id"] < len(session["attributes"]["questions_ids"]):
-                    response, session_attributes = next_question(session["attributes"]["questions_ids"], session["attributes"]["question_now_id"])
+                if session["attributes"]["question_now_id"] < len(session["attributes"]["questions_urls"]):
+                    response, session_attributes = next_question(session["attributes"]["questions_urls"], session["attributes"]["question_now_id"])
                 else:
                     response, session_attributes = no_more_questions()
             else:
@@ -150,7 +150,7 @@ def all_response(intent_request, query = "", session = ""):
     elif session["attributes"]["requested_value"] == "give_comment":
         if intent_request["intent"]["slots"]["answer"]["value"] == "no":
             if session["attributes"]["answer_now_id"] == len(session["attributes"]["answers_ids"]):
-                if session["attributes"]["question_now_id"] < len(session["attributes"]["questions_ids"]):
+                if session["attributes"]["question_now_id"] < len(session["attributes"]["questions_urls"]):
                     response, session_attributes = next_related_question(session)
                 else:
                     response, session_attributes = session_end_greetings()
@@ -163,8 +163,8 @@ def all_response(intent_request, query = "", session = ""):
         if intent_request["intent"]["slots"]["answer"]["value"] == "no":
             response, session_attributes = session_end_greetings()
         elif intent_request["intent"]["slots"]["answer"]["value"] == "yes":
-            if session["attributes"]["question_now_id"] < len(session["attributes"]["questions_ids"]):
-                response, session_attributes = next_question(session["attributes"]["questions_ids"], session["attributes"]["question_now_id"])
+            if session["attributes"]["question_now_id"] < len(session["attributes"]["questions_urls"]):
+                response, session_attributes = next_question(session["attributes"]["questions_urls"], session["attributes"]["question_now_id"])
             else:
                 response, session_attributes = no_more_questions()
         else:
@@ -185,7 +185,8 @@ def get_install_instructions(intent_request, session, answer_intent = False):
         session_attributes = get_session_attributes(previous_intent = "library_install_Intent", previous_intent_attributes = intent_attributes, requested_value = "operating_system")
         response = get_response(outputSpeech_text = outputSpeech_text,  repromt_outputSpeech_text=repromt_outputSpeech_text, shouldEndSession = False)
     else:
-        query = "stackoverflow how to install " + intent_attributes["library_name"] + " in " + intent_attributes["operating_system"]
+        query = "how to install " + intent_attributes["library_name"] + " in " + intent_attributes["operating_system"]
+        # query = "superuser opencv install"
         return all_response(query = query, session = session, intent_request = intent_request)
     return give_response(response = response, session_attributes = session_attributes)
 
@@ -204,7 +205,7 @@ def get_remove_instructions(intent_request, session, answer_intent = False):
         session_attributes = get_session_attributes(previous_intent = "library_remove_Intent", previous_intent_attributes = intent_attributes, requested_value = "operating_system")
         response = get_response(outputSpeech_text = outputSpeech_text,  repromt_outputSpeech_text=repromt_outputSpeech_text, shouldEndSession = False)
     else:
-        query = "stackoverflow how to remove " + intent_attributes["library_name"] + " from " + intent_attributes["operating_system"]
+        query = "how to remove " + intent_attributes["library_name"] + " from " + intent_attributes["operating_system"]
         return all_response(query = query, session = session, intent_request = intent_request)
     return give_response(response = response, session_attributes = session_attributes)
 
@@ -217,7 +218,7 @@ def get_error_instructions(intent_request, session, answer_intent = False):
         session_attributes = get_session_attributes(previous_intent = "Error_Intent", previous_intent_attributes = intent_attributes, requested_value = "error_name")
         response = get_response(outputSpeech_text = outputSpeech_text, repromt_outputSpeech_text=repromt_outputSpeech_text, shouldEndSession = False)
     else:
-        query = "stackoverflow error " + intent_attributes["error_name"]
+        query = "error " + intent_attributes["error_name"]
         return all_response(query = query, session = session, intent_request = intent_request)
     return give_response(response = response, session_attributes = session_attributes)
 
@@ -230,7 +231,7 @@ def get_help_instructions(intent_request, session, answer_intent = False):
         session_attributes = get_session_attributes(previous_intent = "Help_Intent", previous_intent_attributes = intent_attributes, requested_value = "query_name")
         response = get_response(outputSpeech_text = outputSpeech_text, repromt_outputSpeech_text=repromt_outputSpeech_text, shouldEndSession = False)
     else:
-        query = "stackoverflow help " + intent_attributes["query_name"]
+        query = "help " + intent_attributes["query_name"]
         return all_response(query = query, session = session, intent_request = intent_request)
     return give_response(response = response, session_attributes = session_attributes)
 
@@ -252,7 +253,7 @@ def get_comparision_instructions(intent_request, session, answer_intent = False)
         session_attributes = get_session_attributes(previous_intent = "Comparision_Intent", previous_intent_attributes = intent_attributes, requested_value = "Comparision_a")
         response = get_response(outputSpeech_text = outputSpeech_text, shouldEndSession = False)
     else:
-        query = "stackoverflow which is better " + intent_attributes["Comparision_a"] + " or " + intent_attributes["Comparision_b"]
+        query = "xwhich is better " + intent_attributes["Comparision_a"] + " or " + intent_attributes["Comparision_b"]
         return all_response(query = query, session = session, intent_request = intent_request)
     return give_response(response = response, session_attributes = session_attributes)
 
@@ -261,6 +262,9 @@ def on_session_ended(session_ended_request, session):
     # Cleanup goes here...
 if __name__ == "__main__":
     test_case = get_testcase()
+    # index = sys.argv[1]
+    # index = 5
+    # print lambda_handler(test_case[int(index)], {})
     try:
         index = sys.argv[1]
         if((int(index) > 9)|(int(index) < 0)):
@@ -273,8 +277,8 @@ if __name__ == "__main__":
             print '5 - When Alexa provide answer to the question and user responds "repeat"'
             print '6 - When user says yes to provide comments to the answer "yes"'
             print '7 - When Alexa asks user whether or not to provide second best answer to the question and user responds "yes"'
-            print '8 - Error Intent "Alexa, ask stack overflow ehat is identation error in python"'
-            print '9 - Comparision Intent "Alexa, ask stack overflow which is superior Python or C++"'
+            print '8 - Error Intent "Alexa ask stack overflow what is identation error in python"'
+            print '9 - Comparision Intent "Alexa ask stack overflow which is superior Python or C++"'
         else:
             print lambda_handler(test_case[int(index)], {})
     except:
