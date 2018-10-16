@@ -19,7 +19,7 @@ git clone https://github.com/mr-yamraj/Alexa-Stack-Overflow.git
 cd Alexa-Stack-Overflow
 
 #install all the dependencies
-pip install requirements.txt
+pip install -r requirements.txt
 
 #run the function
 python lambda_function.py <test-case-index>
